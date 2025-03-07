@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 
 import { type Role } from '@/app/api/roles/route';
 
+// TODO: Move to .env
+const API_BASE_URL = 'http://localhost:3002';
+
 export type User = {
   id: string;
   first: string;
@@ -27,7 +30,7 @@ export const GET = async (req: Request) => {
   const limit = searchParams.get("limit") || 10;
 
   try {
-    const usersResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users?page=${page}&limit=${limit}`, {
+    const usersResponse = await fetch(`${API_BASE_URL}/users?page=${page}&limit=${limit}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -91,7 +94,7 @@ export const POST = async (request: Request) => {
   try {
     const body = await request.json();
     
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
+    const response = await fetch(`${API_BASE_URL}/users`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

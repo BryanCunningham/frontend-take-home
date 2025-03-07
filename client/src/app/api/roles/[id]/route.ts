@@ -1,10 +1,13 @@
 import { NextResponse, NextRequest } from 'next/server';
 
+// TODO: Move to .env
+const API_BASE_URL = 'http://localhost:3002';
+
 export const GET = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   const id = (await params)?.id;
   
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/roles/${id}`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -42,7 +45,7 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
   try {
     const body = await request.json();
     
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/roles/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -79,7 +82,7 @@ export const DELETE = async (request: NextRequest, { params }: { params: Promise
   const id = (await params)?.id;
   
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/roles/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

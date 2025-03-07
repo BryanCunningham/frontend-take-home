@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+// TODO: Move to .env
+const API_BASE_URL = 'http://localhost:3002';
+
 // TODO: Find a way to share these types with the server
 export type Role = {
   id: string;
@@ -19,7 +22,7 @@ export type RolesData = {
 
 export const GET = async () => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles`, {
+    const response = await fetch(`${API_BASE_URL}/roles`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -49,7 +52,7 @@ export const POST = async (request: Request) => {
   try {
     const body = await request.json();
     
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles`, {
+    const response = await fetch(`${API_BASE_URL}/roles`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
