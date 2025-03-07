@@ -370,7 +370,7 @@ const UserTable = () => {
                                     </Dialog.Description>
                                     <Flex gap="4" justify="end">
                                       <Dialog.Close>
-                                        <Button variant="surface" color="gray" onClick={() => setIsShowingConfirmModal(false)}>
+                                        <Button variant="surface" color="gray">
                                           Cancel
                                         </Button>
                                       </Dialog.Close>

@@ -1,3 +1,5 @@
+'use client';
+
 import { ChangeEventHandler, useCallback, useState } from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { TextField } from "@radix-ui/themes";
@@ -19,7 +21,7 @@ const SearchField = ({ onChange, placeholder = "Search", searchTerm }: SearchFie
 
   return (
     <TextField.Root 
-      size="3"
+      
       placeholder={placeholder}
       value={internalSearchTerm}
       onChange={handleChange}

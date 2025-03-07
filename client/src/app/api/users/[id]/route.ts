@@ -1,9 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-const API_BASE_URL = 'http://localhost:3002';
-
-export const GET = async (request: Request, { params }: { params: { id: string } }) => {
-  const { id } = await params;
+export const GET = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  const id = (await params).id;
   
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`, {
@@ -38,13 +36,13 @@ export const GET = async (request: Request, { params }: { params: { id: string }
   }
 }
 
-export const PATCH = async (request: Request, { params }: { params: { id: string } }) => {
-  const { id } = await params;
+export const PATCH = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  const id = (await params).id;
 
   try {
     const body = await request.json();
     
-    const response = await fetch(`${API_BASE_URL}/users/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -77,11 +75,11 @@ export const PATCH = async (request: Request, { params }: { params: { id: string
   }
 }
 
-export const DELETE = async (request: Request, { params }: { params: { id: string } }) => {
-  const { id } = params;
+export const DELETE = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  const id = (await params).id;
   
   try {
-    const response = await fetch(`${API_BASE_URL}/users/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

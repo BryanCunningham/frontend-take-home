@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 
-export const GET = async (request: Request, { params }: { params: { id: string } }) => {
-  const { id } = params;
+export const GET = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  const id = (await params)?.id;
   
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles/${id}`, {
@@ -36,8 +36,8 @@ export const GET = async (request: Request, { params }: { params: { id: string }
   }
 }
 
-export const PATCH = async (request: Request, { params }: { params: { id: string } }) => {
-  const { id } = params;
+export const PATCH = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  const id = (await params)?.id;
   
   try {
     const body = await request.json();
@@ -75,8 +75,8 @@ export const PATCH = async (request: Request, { params }: { params: { id: string
   }
 }
 
-export const DELETE = async (request: Request, { params }: { params: { id: string } }) => {
-  const { id } = params;
+export const DELETE = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  const id = (await params)?.id;
   
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles/${id}`, {
