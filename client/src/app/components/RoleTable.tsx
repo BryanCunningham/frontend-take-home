@@ -1,22 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { 
   Table, 
-  // Box, 
-  // Heading, 
   Text, 
-  // Card, 
   Flex, 
   Button, 
-  // TextField,
   ScrollArea,
   IconButton,
   Skeleton,
-  Select,
   Callout,
   Popover,
-  Dialog,
   TextField
 } from '@radix-ui/themes';
 import { CheckIcon, Cross1Icon, DotsHorizontalIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
@@ -52,7 +46,7 @@ const RolesTable = () => {
   const [isSavingRole, setIsSavingRole] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { rolesData, isRolesLoading, setRolesData } = useRoles();
-  console.log('rolesData', {rolesData});
+
   const handleEditRole = (role: Role) => {
     setEditingRole({
       id: role.id,

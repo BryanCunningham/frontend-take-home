@@ -3,11 +3,8 @@
 import { useState, useEffect } from 'react';
 import { 
   Table, 
-  Box,
   Callout,
-  // Heading, 
   Text, 
-  // Card, 
   Flex,
   Button,
   TextField,
@@ -19,12 +16,12 @@ import {
   Dialog,
   Select
 } from '@radix-ui/themes';
-import { MagnifyingGlassIcon, CheckIcon, Cross1Icon, DotsHorizontalIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { CheckIcon, Cross1Icon, DotsHorizontalIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { User, UsersResponse } from '@/app/api/users/route';
 import { Pagination } from './ui';
 import { formatDate } from '../utils';
 import { useRoles } from '../context/RolesProvider';
-import SearchField from './ui/SearchField';
+import { SearchField } from './ui';
 
 type UsersData = {
   users: User[];
@@ -67,12 +64,12 @@ const LoadingRow = () => {
 
 const UserTable = () => {
   const [usersData, setUsersData] = useState<UsersData | undefined>(undefined);
-  const [editingUserId, setEditingUserId] = useState<string | null>(null);
   const [editedUser, setEditedUser] = useState<Partial<User>>({});
   const [isSavingUser, setIsSavingUser] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  // Need the role data to show updates to role names and to build select options
   const { roleIdToRoleNameMap } = useRoles();
 
   useEffect(() => {
@@ -112,8 +109,8 @@ const UserTable = () => {
   }) || [];
 
   const handleEditUser = (user: User) => {
-    setEditingUserId(user.id);
     setEditedUser({
+      id: user.id,
       first: user.first,
       last: user.last,
       roleId: user.roleId
@@ -145,7 +142,6 @@ const UserTable = () => {
         users: remainingUsers
       });
       
-      setEditingUserId(null);
       setEditedUser({});
     } catch (err) {
       setError('Failed to delete user. Please try again.');
@@ -184,7 +180,6 @@ const UserTable = () => {
         users: [...otherUsers, updatedUser]
       });
       
-      setEditingUserId(null);
       setEditedUser({});
     } catch (err) {
       setError('Failed to update user. Please try again.');
@@ -195,7 +190,6 @@ const UserTable = () => {
   };
 
   const handleCancelEdit = () => {
-    setEditingUserId(null);
     setEditedUser({});
     setError(null);
   };
@@ -271,7 +265,7 @@ const UserTable = () => {
                           fallback={`${user.first[0]}${user.last[0]}`}
                           radius="full"
                         />
-                        {editingUserId === user.id ? (
+                        {editedUser?.id === user.id ? (
                           <Flex direction="column" gap="2">
                             <TextField.Root 
                               value={editedUser.first}
@@ -296,7 +290,7 @@ const UserTable = () => {
                       </Flex>
                     </Table.Cell>
                     <Table.Cell>
-                      {editingUserId === user.id ? (
+                      {editedUser?.id === user.id ? (
                         <Select.Root 
                           value={editedUser.roleId}
                           onValueChange={(value) => setEditedUser({
@@ -325,7 +319,7 @@ const UserTable = () => {
                       </Text>
                     </Table.Cell>
                     <Table.Cell align="right">
-                      {editingUserId === user.id ? (
+                      {editedUser?.id === user.id ? (
                         <Flex gap="2" justify="end">
                           <Button 
                             variant="soft" 
