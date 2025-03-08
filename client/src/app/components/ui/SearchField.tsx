@@ -21,10 +21,11 @@ const SearchField = ({ onChange, placeholder = "Search", searchTerm }: SearchFie
 
   return (
     <TextField.Root 
-      
+      size="3"
       placeholder={placeholder}
       value={internalSearchTerm}
       onChange={handleChange}
+      aria-label={placeholder}
     >
       <TextField.Slot>
         <MagnifyingGlassIcon height="16" width="16" />

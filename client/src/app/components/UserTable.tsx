@@ -196,16 +196,15 @@ const UserTable = () => {
 
   const handlePageChange = async (page: number) => {
     const cachedResults = userResultsCache.get(page);
-
+    
     if (cachedResults) {
       setUsersData(cachedResults);
     } else {
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/users?includeRoles=true&page=${page}`);
+        const response = await fetch(`/api/users?page=${page}`);
         const data: UsersResponse = await response.json();
         const formattedData = formatUsersData(data);
-
         userResultsCache.set(page, formattedData);
 
         setUsersData(formattedData);
@@ -349,11 +348,13 @@ const UserTable = () => {
                               color="gray"
                               radius="full"
                               size="2"
+                              aria-label="Display actions for user"
+                              aria-controls="user-actions"
                             >
                               <DotsHorizontalIcon />
                             </IconButton>
                           </Popover.Trigger>
-                          <Popover.Content>
+                          <Popover.Content id="user-actions">
                             <Flex direction="column" gap="2">
                               <Button variant="ghost" color="gray" onClick={() => handleEditUser(user)}>  
                                 Edit user

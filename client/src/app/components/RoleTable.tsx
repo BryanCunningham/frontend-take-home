@@ -175,11 +175,13 @@ const RolesTable = () => {
                               color="gray"
                               radius="full"
                               size="2"
+                              aria-label="Display actions for role"
+                              aria-controls="role-actions"
                             >
                               <DotsHorizontalIcon />
                             </IconButton>
                           </Popover.Trigger>
-                          <Popover.Content>
+                          <Popover.Content id="role-actions">
                             <Button variant="ghost" color="gray" onClick={() => handleEditRole(role)}>  
                               Edit role
                             </Button>
