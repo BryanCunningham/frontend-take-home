@@ -13,3 +13,13 @@
      npm install
      npm run dev
      ```
+
+**Access the application**
+- Open your browser and navigate to `http://localhost:3000` to access the application.
+
+#### Things I'd add
+- Responsive design
+- May color code the roles for easier differentiation at a glance
+- I'd probably try to add a reusable Table component
+- Possibly add sorting to the tables
+
