@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { 
   Table, 
   Callout,
+  Card,
   Text, 
   Flex,
   Button,
@@ -14,14 +15,17 @@ import {
   Popover,
   IconButton,
   Dialog,
-  Select
+  Select,
+  Grid
 } from '@radix-ui/themes';
-import { CheckIcon, Cross1Icon, DotsHorizontalIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { CheckIcon, Cross1Icon, DotsHorizontalIcon, ExclamationTriangleIcon, PlusIcon } from '@radix-ui/react-icons';
 import { User, UsersResponse } from '@/app/api/users/route';
 import { Pagination } from './ui';
 import { formatDate } from '../utils';
 import { useRoles } from '../context/RolesProvider';
 import { SearchField } from './ui';
+import AddUserForm from './AddUserForm';
+import RolesSelect from './ui/RolesSelect';
 
 type UsersData = {
   users: User[];
@@ -47,7 +51,7 @@ const LoadingRow = () => {
   return (
     <Table.Row>
       <Table.Cell>
-        <Skeleton width="32px" height="32px" />
+        <Skeleton style={{ borderRadius: '50%' }} width="32px" height="32px" />
       </Table.Cell>
       <Table.Cell >
         <Skeleton  />
@@ -69,6 +73,7 @@ const UserTable = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isAddingUser, setIsAddingUser] = useState(false);
   // Need the role data to show updates to role names and to build select options
   const { roleIdToRoleNameMap } = useRoles();
 
@@ -102,11 +107,44 @@ const UserTable = () => {
     fetchUsers();
   }, []);
   
-  const filteredUsers = usersData?.users.filter(user => {
+  const filteredUsers = usersData?.users?.filter(user => {
     const searchString = searchTerm.toLowerCase();
     const fullName = `${user.first} ${user.last}`.toLowerCase();
     return fullName.includes(searchString) || user.roleId.toLowerCase().includes(searchString);
   }) || [];
+
+  const handleAddUser = async (user: Partial<User>) => {
+    setIsSavingUser(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete user');
+      }
+
+      const newUser = await response.json();
+
+      setUsersData({
+        ...usersData,
+        users: [...usersData?.users || [], newUser]
+      });
+      
+    } catch (err) {
+      setError('Failed to add user. Please try again.');
+      console.error('Error adding user:', err);
+    } finally {
+      setIsAddingUser(false);
+      setIsSavingUser(false);
+    }
+  };
 
   const handleEditUser = (user: User) => {
     setEditedUser({
@@ -235,8 +273,23 @@ const UserTable = () => {
             </Flex>
           </Callout.Root>
         )}
-
-        <SearchField placeholder="Search by name..." onChange={setSearchTerm} searchTerm={searchTerm} />
+          <Flex justify="between" align="center" gap="2">
+            <SearchField placeholder="Search by name..." onChange={setSearchTerm} searchTerm={searchTerm} />
+            <Dialog.Root open={isAddingUser}>
+              <Dialog.Trigger>
+                <Button size="3" color="indigo" onClick={() => setIsAddingUser(true)}><PlusIcon />Add user</Button>
+              </Dialog.Trigger>
+              <Dialog.Content>
+                <Flex direction="column" gap="2">
+                  <Dialog.Title>New user form</Dialog.Title>
+                  <Dialog.Description>
+                    Add a new user to the system.
+                  </Dialog.Description>
+                  <AddUserForm isLoading={isSavingUser} onSubmit={handleAddUser} />
+                </Flex>
+              </Dialog.Content>
+            </Dialog.Root>
+          </Flex>
 
           <ScrollArea>
             <Table.Root variant="surface">
@@ -290,24 +343,13 @@ const UserTable = () => {
                     </Table.Cell>
                     <Table.Cell>
                       {editedUser?.id === user.id ? (
-                        <Select.Root 
-                          value={editedUser.roleId}
-                          onValueChange={(value) => setEditedUser({
+                        <RolesSelect 
+                          value={editedUser.roleId} 
+                          onChange={(value: User['roleId']) => setEditedUser({
                             ...editedUser,
                             roleId: value
-                          })}
-                        >
-                          <Select.Trigger />
-                          <Select.Content>
-                            {[...roleIdToRoleNameMap.entries()].map(([roleId, roleName]) => {
-                              return (
-                                <Select.Item key={roleId} value={roleId}>
-                                  {roleName}
-                                </Select.Item>
-                              )
-                            })}
-                          </Select.Content>
-                        </Select.Root>
+                          })} 
+                        />
                       ) : (
                         <Text>{roleIdToRoleNameMap.get(user.roleId) || user.roleId}</Text>
                       )}

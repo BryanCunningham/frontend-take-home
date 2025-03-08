@@ -22,4 +22,9 @@
 - May color code the roles for easier differentiation at a glance
 - I'd probably try to add a reusable Table component
 - Possibly add sorting to the tables
-
+- Add real form validation
+- Show a message on the UserTable when:
+  - A user is successfully added
+  - A user is successfully deleted
+  - A user is successfully updated
+  - Roles fail to load so we can only show the user's roleId until they are loaded

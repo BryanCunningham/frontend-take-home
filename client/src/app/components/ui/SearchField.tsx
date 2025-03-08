@@ -5,12 +5,13 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { TextField } from "@radix-ui/themes";
 
 type SearchFieldProps = {
+  isFullWidth?: boolean;
   onChange?: (searchTerm: string) => void;
   placeholder?: string;
   searchTerm: string;
 }
 
-const SearchField = ({ onChange, placeholder = "Search", searchTerm }: SearchFieldProps) => {
+const SearchField = ({ isFullWidth = true, onChange, placeholder = "Search", searchTerm }: SearchFieldProps) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState(searchTerm);
 
   const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
@@ -26,6 +27,7 @@ const SearchField = ({ onChange, placeholder = "Search", searchTerm }: SearchFie
       value={internalSearchTerm}
       onChange={handleChange}
       aria-label={placeholder}
+      style={{ width: isFullWidth ? '100%' : 'auto' }}
     >
       <TextField.Slot>
         <MagnifyingGlassIcon height="16" width="16" />
