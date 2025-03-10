@@ -28,4 +28,6 @@
   - A user is successfully deleted
   - A user is successfully updated
   - Roles fail to load so we can only show the user's roleId until they are loaded
+- Show a message on the UserTable when:
+  - A role is successfully edited
 - Also just realized that the add user dialog doesn't close when clicked outside/overlay. Would need to fix that :)
